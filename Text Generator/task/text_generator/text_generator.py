@@ -1,16 +1,14 @@
 from nltk.tokenize import WhitespaceTokenizer
 from nltk.probability import FreqDist
+from nltk import bigrams
 
 file = open(input(), 'r', encoding='utf-8').read()
 
 corpus = WhitespaceTokenizer().tokenize(file)
-total_words = FreqDist(corpus).N()
-unique_words = FreqDist(corpus).B()
+bgrms = list(bigrams(corpus))
+total_bigrams = FreqDist(bgrms).N()
 
-
-print('Corpus statistics')
-print('All tokes: ', total_words)
-print('Unique tokes', unique_words, '\n')
+print(f'Number of bigrams: {total_bigrams}')
 
 while True:
     usr_inp = input()
@@ -20,7 +18,8 @@ while True:
     else:
         try:
             index = int(usr_inp)
-            print(corpus[index])
+            bgrm_index = bgrms[index]
+            print('Head:', bgrm_index[0], 'Tail:', bgrm_index[1])
         except (ValueError, TypeError):
             print('Type Error. Please input an integer.')
         except IndexError:
