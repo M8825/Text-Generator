@@ -1,6 +1,7 @@
 from nltk.tokenize import WhitespaceTokenizer
 from nltk.probability import FreqDist
 from nltk import bigrams
+from collections import Counter
 
 file = open(input(), 'r', encoding='utf-8').read()
 
@@ -13,14 +14,22 @@ print(f'Number of bigrams: {total_bigrams}')
 while True:
     usr_inp = input()
 
-    if usr_inp == 'exit':
-        break
+    if usr_inp == 'exit': break
     else:
         try:
-            index = int(usr_inp)
-            bgrm_index = bgrms[index]
-            print('Head:', bgrm_index[0], 'Tail:', bgrm_index[1])
+            # Create dictionary of unique head and all available keys.
+            chain = {}
+            for head, tail in bgrms:
+                chain.setdefault(head, []).append(tail)
+            tails = Counter(chain[usr_inp]).most_common()  # TODO Maybe check usr_inp type?
+            print('Head:', usr_inp)
+
+            for word, count in tails:
+                print('Tail:', word, ' Count:', count)
+
         except (ValueError, TypeError):
             print('Type Error. Please input an integer.')
         except IndexError:
             print('Index Error. Please input an integer that is in the range of the corpus.')
+        except KeyError:
+           print('Key Error. The requested word is not in the model. Please input another word.')
